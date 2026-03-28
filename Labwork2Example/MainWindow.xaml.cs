@@ -1,17 +1,10 @@
-﻿using LiveCharts.Charts;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System.Data;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace Labwork2Example
 {
@@ -22,11 +15,16 @@ namespace Labwork2Example
     {
         private DataTable? _dataTable1;
         private DataTable? _dataTable2;
-        private string defaultDataDirectoryPath = @"f:\Temp\Labwork2Data\";
+        private string _defaultDataDirectoryPath = @"f:\Temp\Labwork2Data\";
 
         public MainWindow()
         {
             InitializeComponent();
+
+            if (!Path.Exists(_defaultDataDirectoryPath))
+            {
+                _defaultDataDirectoryPath = "";
+            }
         }
 
         private bool TryParseRow(IReadOnlyList<string> row, object[] values, out int firstErrorPosition)
@@ -53,7 +51,7 @@ namespace Labwork2Example
             //         ?.FullName!)?.FullName + @"\DataFiles";
             var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = defaultDataDirectoryPath,
+                InitialDirectory = _defaultDataDirectoryPath,
                 CheckFileExists = true,
                 Filter = "Text files (*.txt)|*.txt",
                 FileName = ""
@@ -151,7 +149,7 @@ namespace Labwork2Example
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -284,7 +282,7 @@ namespace Labwork2Example
                 : _dataTable2;
             var saveFileDialog = new SaveFileDialog
             {
-                InitialDirectory = defaultDataDirectoryPath,
+                InitialDirectory = _defaultDataDirectoryPath,
                 Filter = "Text files (*.txt)|*.txt",
                 DefaultExt = ".txt",
                 FileName = ""
